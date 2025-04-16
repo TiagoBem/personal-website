@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Header from "../components/Header";
 import ServiceCard from "../components/ServiceCard";
 import Socials from "../components/Socials";
@@ -22,6 +22,49 @@ export default function Home() {
   const textTwo = useRef();
   const textThree = useRef();
   const textFour = useRef();
+  const workRefs = useRef([]);
+  const serviceRefs = useRef([]);
+  const aboutRefContainer = useRef();
+  const footerRef = useRef();
+
+  useIsomorphicLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+  
+    const groupsToObserve = [
+      [textOne.current, textTwo.current, textThree.current, textFour.current],
+      workRefs.current,
+      serviceRefs.current,
+      [aboutRefContainer.current],
+      [footerRef.current],
+    ];
+  
+    const observers = [];
+  
+    groupsToObserve.forEach((group) => {
+      const validElements = group.filter(Boolean); // remove nulls
+  
+      if (validElements.length === 0) return;
+  
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          const isAnyVisible = entries.some((entry) => entry.isIntersecting);
+          if (isAnyVisible) {
+            stagger(validElements, { y: 40, x: -10, transform: "scale(0.95) skew(10deg)" }, { y: 0, x: 0, transform: "scale(1)" });
+            // depois de animar, não precisa observar mais
+            validElements.forEach((el) => el && obs.unobserve(el));
+          }
+        },
+        { threshold: 0.1 }
+      );
+  
+      validElements.forEach((el) => observer.observe(el));
+      observers.push(observer);
+    });
+  
+    return () => {
+      observers.forEach((observer) => observer.disconnect());
+    };
+  }, []);
 
   // Handling Scroll
   const handleWorkScroll = () => {
@@ -40,13 +83,13 @@ export default function Home() {
     });
   };
 
-  useIsomorphicLayoutEffect(() => {
-    stagger(
-      [textOne.current, textTwo.current, textThree.current, textFour.current],
-      { y: 40, x: -10, transform: "scale(0.95) skew(10deg)" },
-      { y: 0, x: 0, transform: "scale(1)" }
-    );
-  }, []);
+  // useIsomorphicLayoutEffect(() => {
+  //   stagger(
+  //     [textOne.current, textTwo.current, textThree.current, textFour.current, workRefs.current, serviceRefs.current, aboutRefContainer.current, footerRef.current],
+  //     { y: 40, x: -10, transform: "scale(0.95) skew(10deg)" },
+  //     { y: 0, x: 0, transform: "scale(1)" }
+  //   );
+  // }, []);
 
   return (
     <div className={`relative ${data.showCursor && "cursor-none"}`}>
@@ -57,12 +100,28 @@ export default function Home() {
 
       <div className="gradient-circle"></div>
       <div className="gradient-circle-bottom"></div>
-
+{/* 
+      <div style={{ height: "100vh" }} className="relative">
+        <img
+              src={data.headerPhoto}
+              alt="Header"
+              className="w-full h-full object-contain"
+            />
+        </div> */}
       <div className="container mx-auto mb-10">
         <Header
           handleWorkScroll={handleWorkScroll}
           handleAboutScroll={handleAboutScroll}
         />
+        <div className="w-full flex justify-center mt-10">
+          <div className="w-72 h-72 laptop:w-88 laptop:h-88 rounded-full overflow-hidden border-4 border-white shadow-md">
+            <img
+              src={data.headerPhoto}
+              alt="Header"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
         <div className="laptop:mt-20 mt-10">
           <div className="mt-5">
             <h1
@@ -97,14 +156,18 @@ export default function Home() {
           <h1 className="text-2xl text-bold">Work.</h1>
 
           <div className="mt-5 laptop:mt-10 grid grid-cols-1 tablet:grid-cols-2 gap-4">
-            {data.projects.map((project) => (
-              <WorkCard
+            {data.projects.map((project, index) => (
+              <div
+                ref={(el) => (workRefs.current[index] = el)}
                 key={project.id}
-                img={project.imageSrc}
-                name={project.title}
-                description={project.description}
-                onClick={() => window.open(project.url)}
-              />
+              >
+                <WorkCard
+                  img={project.imageSrc}
+                  name={project.title}
+                  description={project.description}
+                  onClick={() => window.open(project.url)}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -113,11 +176,16 @@ export default function Home() {
           <h1 className="tablet:m-10 text-2xl text-bold">Services.</h1>
           <div className="mt-5 tablet:m-10 grid grid-cols-1 laptop:grid-cols-2 gap-6">
             {data.services.map((service, index) => (
-              <ServiceCard
-                key={index}
+              <div
+                ref={(el) => (serviceRefs.current[index] = el)}
+                key={service.id}
+              >
+                <ServiceCard
+                  key={index}
                 name={service.title}
                 description={service.description}
               />
+              </div>
             ))}
           </div>
         </div>
@@ -131,11 +199,18 @@ export default function Home() {
         )}
         <div className="mt-10 laptop:mt-40 p-2 laptop:p-0" ref={aboutRef}>
           <h1 className="tablet:m-10 text-2xl text-bold">About.</h1>
-          <p className="tablet:m-10 mt-2 text-xl laptop:text-3xl w-full laptop:w-3/5">
+          <div
+            ref={aboutRefContainer}
+            className="tablet:m-10 mt-2 text-xl laptop:text-3xl w-full laptop:w-3/5"
+          >
             {data.aboutpara}
-          </p>
+          </div>
         </div>
-        <Footer />
+        <div
+          ref={footerRef}
+        >
+          <Footer />
+        </div>
       </div>
     </div>
   );

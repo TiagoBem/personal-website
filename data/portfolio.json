@@ -1,5 +1,6 @@
 {
     "name": "Tiago Bem",
+    "headerPhoto": "https://xlkhoddxqpguocildmyo.supabase.co/storage/v1/object/public/images/profile_images/IMG_20240513_230040_303.jpg",
     "headerTaglineOne": "Hello 👋",
     "headerTaglineTwo": "I'm Tiago Bem - curious",
     "headerTaglineThree": "developer based",
@@ -61,7 +62,7 @@
             "description": "Rapid development of Minimum Viable Products to validate your startup idea with real users and minimize time-to-market."
         }
     ],
-    "aboutpara": "I'm currently CTO at Ofir Labs, a startup currently focused on developing the Raya Culture platform. As such, I have acquired experience in the entire technological area of the same platform, as well as infrastructure, strategy and product development. Some of the technologies are: React Native, NestJS, Next.js, Postgres, Cloudflare, Redis, AWS, CI/CD, etc. As well as this, I also have past experience in large, agile (Scrum) projects, and cutting-edge technologies such as Azure DevOps, Git, C#, WPF, WCF, Spring Boot, Ionic Framework, Oracle DB and MySQL. I did my academic education at FCUP where I attended the Integrated Masters in Network and Computer Systems Engineering.",
+    "aboutpara": "I'm currently CTO at Ofir Labs, a startup currently focused on developing the Raya Culture platform. As such, I have acquired experience in the entire technological area of the same platform, as well as infrastructure, strategy and product development. Some of the technologies are: React Native, NestJS, Next.js, Postgres, Cloudflare, Redis, AWS, CI/CD, Jira, etc. As well as this, I also have past experience in large, agile (Scrum) projects, and cutting-edge technologies such as Azure DevOps, Git, C#, WPF, WCF, Spring Boot, Ionic Framework, Oracle DB and MySQL. I did my academic education at FCUP where I attended the Integrated Masters in Network and Computer Systems Engineering.",
     "resume": {
         "tagline": "👋  I'm a software engineer, product designer.",
         "description": "I have delivered world-class user experiences to millions of people. Well-versed with React, Javascript, and most of the Web frameworks.",
